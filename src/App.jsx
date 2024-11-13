@@ -1,35 +1,28 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+    const ploping = "PLOPing";
+    const plopStyle = {color:"red", backgroundColor:"blue"};
+    const jsonFile = "C:/Users/jack_/Documents/Dev/Plop/05409F30417BD8F1A589D1B32318E40A.replay.json"
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const [test,setTest] = useState(0) ;
+    console.log(test);
+
+    let contentFile = "";
+
+
+
+    const clicking = (e) => {
+      setTest(test+1);
+    };
+
+
+  return <>
+    <h1 id="plop" style={plopStyle}>PLOP</h1>
+    <h1 id={ploping} onClick={clicking} >{ploping} {test}</h1>
+    <p>{jsonFile}</p>
+  </>
 }
 
 export default App
