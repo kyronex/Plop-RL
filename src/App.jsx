@@ -12,7 +12,6 @@ function App() {
     let contentFile = "";
 
 
-
     const clicking = (e) => {
       setTest(test+1);
     };
