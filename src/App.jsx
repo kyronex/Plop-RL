@@ -1,27 +1,92 @@
-import { useState } from 'react'
-
+import { useState } from "react";
 
 function App() {
-    const ploping = "PLOPing";
-    const plopStyle = {color:"red", backgroundColor:"blue"};
-    const jsonFile = "C:/Users/jack_/Documents/Dev/Plop/05409F30417BD8F1A589D1B32318E40A.replay.json"
+	const ploping = "PLOPingOCCC";
+	const plopStyle = { color: "red", backgroundColor: "blue" };
+	const [test, setTest] = useState(0);
 
-    const [test,setTest] = useState(0) ;
-    console.log(test);
+	const clicking = (e) => {
+		setTest(test + 1);
+	};
 
-    let contentFile = "";
+	function ContentReplay(props) {
+		return (
+			<div>
+				<p>BLABLABKAB</p>
+			</div>
+		);
+	}
 
+	function ReplayInput(props) {
+		const [file, setFile] = useState(null);
+		const [message, setMessage] = useState("");
 
-    const clicking = (e) => {
-      setTest(test+1);
-    };
+		const handleFileChange = (event) => {
+			setFile(event.target.files[0]);
+		};
 
+		const handleSubmit = async (event) => {
+			event.preventDefault();
+			if (!file) {
+				setMessage("Please select a file.");
+				return;
+			}
 
-  return <>
-    <h1 id="plop" style={plopStyle}>PLOP</h1>
-    <h1 id={ploping} onClick={clicking} >{ploping} {test}</h1>
-    <p>{jsonFile}</p>
-  </>
+			const formData = new FormData();
+			formData.append("file", file);
+
+			try {
+				const resp = await fetch("http://localhost:5000/upload", {
+					method: "POST",
+					body: formData,
+				});
+				if (resp.ok) {
+					const data = await resp.json();
+					setMessage(data.message);
+					console.log(data.data);
+				} else {
+					setMessage("Erreur uploading fichier.");
+					console.error("Error:", resp.statusText);
+				}
+			} catch (err) {
+				setMessage("Error uploading file (catch).");
+				console.error("Error:", err);
+			}
+		};
+
+		const renderMessage = () => {
+			if (message) {
+				return <p>{message}</p>;
+			} else {
+				return null;
+			}
+		};
+
+		return (
+			<div>
+				<h2>File Upload Form</h2>
+				<form onSubmit={handleSubmit}>
+					<label>{props.label}</label>
+					<input type="file" onChange={handleFileChange} />
+					<button type="submit">Upload</button>
+				</form>
+				{renderMessage()}
+			</div>
+		);
+	}
+
+	return (
+		<>
+			<h1 id="plop" style={plopStyle}>
+				PLOP
+			</h1>
+			<h1 id={ploping} onClick={clicking}>
+				{ploping} {test}
+			</h1>
+			<ReplayInput label="Replay"></ReplayInput>
+			<ContentReplay></ContentReplay>
+		</>
+	);
 }
 
-export default App
+export default App;
