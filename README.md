@@ -1,8 +1,9 @@
 # React + Vite
 
-
+https://github.com/rocket-league-replays/rocket-league-replays/wiki/Rocket-League-Replay-Parsers
 https://github.com/tanrbobanr/rocket-league-replay-format/blob/main/rpdoc_generated.md
-
+https://github.com/jjbott/RocketLeagueReplayParser/
+https://github.com/rocket-league-replays/rocket-league-replay-parser-js/
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
