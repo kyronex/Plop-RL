@@ -13,10 +13,20 @@ const isNone = function () {
 	}
 };
 
+const isNone2 = function () {
+	console.log("THIS In isNone2");
+	console.log(this);
+	if (this.nom === "None") {
+		return 1;
+	} else {
+		return 0;
+	}
+};
+
 const testType = function () {
-	// console.log("function function function function : testType");
-	// console.log(`this.taille_type > ${this.taille_type}`);
-	// console.log(`this.type > ${this.type}`);
+	console.log("function function function function : testType");
+	console.log(`this.taille_type > ${this.taille_type}`);
+	console.log(`this.type > ${this.type}`);
 
 	switch (this.type) {
 		case "IntProperty":
@@ -37,11 +47,14 @@ const testType = function () {
 			return 7;
 		case "StructProperty":
 			return 8;
+		default:
+			return 0;
 	}
 };
 
 const testReadUntil = function () {
-	//console.log("function function function function : testReadUntil");
+	console.log("function function function function : testReadUntil");
+
 	if (
 		typeof this.Properties.key === "undefined" ||
 		this.Properties.key === null
@@ -50,6 +63,9 @@ const testReadUntil = function () {
 	} else {
 		this.Properties.key = this.Properties.key + 1;
 	}
+
+	// console.log("THIS");
+	// console.log(this);
 
 	// console.log(`this.Properties[this.Properties.key].nom > ${this.Properties[this.Properties.key].nom}`);
 
@@ -78,6 +94,26 @@ const testReadUntil = function () {
 	}
 };
 
+const testReadUntil2 = function () {
+	console.log("function function function function : testReadUntil2");
+	if (
+		typeof this.Structure.key === "undefined" ||
+		this.Structure.key === null
+	) {
+		this.Structure.key = 0;
+	} else {
+		this.Structure.key = this.Structure.key + 1;
+	}
+	console.log("this.Structure[this.Structure.key].Info");
+	console.log(this.Structure[this.Structure.key].Info);
+
+	if (this.Structure[this.Structure.key].nom === "None") {
+		return true;
+	} else {
+		return false;
+	}
+};
+
 const testVersion = function () {
 	if (this.engine_V >= 866 && this.license_V >= 18) {
 		return 1;
@@ -97,8 +133,8 @@ const testStructProperty = function () {
 		this.Structure.key = this.Structure.key + 1;
 	}
 
-	// console.log("THIS");
-	// console.log(this);
+	console.log("THIS");
+	console.log(this);
 
 	console.log("this.Structure[this.Structure.key].type");
 	console.log(this.Structure[this.Structure.key].type);
@@ -106,10 +142,10 @@ const testStructProperty = function () {
 	// console.log("this.Structure[this.Structure.key].taille_type");
 	// console.log(this.Structure[this.Structure.key].taille_type);
 
-	// console.log("this.Structure[this.Structure.key].Unknown");
-	// console.log(this.Structure[this.Structure.key].Unknown);
-	// console.log("this.Structure[this.Structure.key].value");
-	// console.log(this.Structure[this.Structure.key].value);
+	console.log("this.Structure[this.Structure.key].Unknown");
+	console.log(this.Structure[this.Structure.key].Unknown);
+	console.log("this.Structure[this.Structure.key].value");
+	console.log(this.Structure[this.Structure.key].value);
 	if (this.Structure[this.Structure.key].type === "None") {
 		return true;
 	} else {
@@ -178,10 +214,12 @@ const Byte = new Parser()
 	});
 
 const testValueStructProperty = function () {
-	// console.log("function function function function : testValueStructProperty");
+	console.log("function function function function : testValueStructProperty");
 
 	// console.log("THIS");
 	// console.log(this);
+	// console.log("this.Unknown");
+	// console.log(this.Unknown);
 
 	switch (this.Unknown) {
 		case "IntProperty":
@@ -212,31 +250,39 @@ const StructProperty = new Parser().endianess("little").array("Structure", {
 			length: "taille_nom",
 			stripNull: true,
 		})
-		.int32("taille_type")
-		.string("type", {
-			encoding: "utf8",
-			length: "taille_type",
-			stripNull: true,
-		})
-		.int32("taille_Unknown")
-		.string("Unknown", {
-			encoding: "utf8",
-			length: "taille_Unknown",
-			stripNull: true,
-		})
-		.choice("value", {
-			tag: testValueStructProperty,
+		.choice("Info", {
+			tag: isNone2,
 			choices: {
-				1: UInt32,
-				2: String16,
-				3: Float,
-				5: Byte,
-				6: Bool,
-				7: QWord,
-				0: new Parser(),
+				1: new Parser(),
+				0: new Parser()
+					.endianess("little")
+					.int32("taille_label")
+					.string("label", {
+						encoding: "utf8",
+						length: "taille_label",
+						stripNull: true,
+					})
+					.int32("taille_type")
+					.string("type", {
+						encoding: "utf8",
+						length: "taille_type",
+						stripNull: true,
+					})
+					.choice("details", {
+						tag: testType,
+						choices: {
+							1: UInt32,
+							2: String16,
+							3: Float,
+							5: Byte,
+							6: Bool,
+							7: QWord,
+							0: new Parser(),
+						},
+					}),
 			},
 		}),
-	readUntil: testStructProperty,
+	readUntil: testReadUntil2,
 });
 
 const Version = new Parser()
