@@ -250,39 +250,31 @@ const StructProperty = new Parser().endianess("little").array("Structure", {
 			length: "taille_nom",
 			stripNull: true,
 		})
-		.choice("Info", {
-			tag: isNone2,
+
+		.int32("taille_label")
+		.string("label", {
+			encoding: "utf8",
+			length: "taille_label",
+			stripNull: true,
+		})
+		.int32("taille_type")
+		.string("type", {
+			encoding: "utf8",
+			length: "taille_type",
+			stripNull: true,
+		})
+		.choice("details", {
+			tag: testType,
 			choices: {
-				1: new Parser(),
-				0: new Parser()
-					.endianess("little")
-					.int32("taille_label")
-					.string("label", {
-						encoding: "utf8",
-						length: "taille_label",
-						stripNull: true,
-					})
-					.int32("taille_type")
-					.string("type", {
-						encoding: "utf8",
-						length: "taille_type",
-						stripNull: true,
-					})
-					.choice("details", {
-						tag: testType,
-						choices: {
-							1: UInt32,
-							2: String16,
-							3: Float,
-							5: Byte,
-							6: Bool,
-							7: QWord,
-							0: new Parser(),
-						},
-					}),
+				1: UInt32,
+				2: String16,
+				3: Float,
+				5: Byte,
+				6: Bool,
+				7: QWord,
+				0: new Parser(),
 			},
 		}),
-	readUntil: testReadUntil2,
 });
 
 const Version = new Parser()
