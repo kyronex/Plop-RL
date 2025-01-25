@@ -13,15 +13,6 @@ const isNone = function () {
 	}
 };
 
-const isNone2 = function () {
-	console.log("THIS In isNone2");
-	console.log(this);
-	if (this.nom === "None") {
-		return 1;
-	} else {
-		return 0;
-	}
-};
 
 const testType = function () {
 	console.log("function function function function : testType");
@@ -64,13 +55,13 @@ const testReadUntil = function () {
 		this.Properties.key = this.Properties.key + 1;
 	}
 
-	// console.log("THIS");
-	// console.log(this);
+	console.log("THIS");
+	console.log(this);
 
 	// console.log(`this.Properties[this.Properties.key].nom > ${this.Properties[this.Properties.key].nom}`);
 
-	// console.log("this.Properties[this.Properties.key].Info");
-	// console.log(this.Properties[this.Properties.key].Info);
+	console.log("this.Properties[this.Properties.key].Info");
+	console.log(this.Properties[this.Properties.key].Info);
 
 	// console.log("this.Properties[this.Properties.key].Info.value");
 	// console.log(this.Properties[this.Properties.key].Info.value);
@@ -241,41 +232,38 @@ const testValueStructProperty = function () {
 	}
 };
 
-const StructProperty = new Parser().endianess("little").array("Structure", {
-	type: new Parser()
-		.endianess("little")
-		.int32("taille_nom")
-		.string("nom", {
-			encoding: "utf8",
-			length: "taille_nom",
-			stripNull: true,
-		})
-
-		.int32("taille_label")
-		.string("label", {
-			encoding: "utf8",
-			length: "taille_label",
-			stripNull: true,
-		})
-		.int32("taille_type")
-		.string("type", {
-			encoding: "utf8",
-			length: "taille_type",
-			stripNull: true,
-		})
-		.choice("details", {
-			tag: testType,
-			choices: {
-				1: UInt32,
-				2: String16,
-				3: Float,
-				5: Byte,
-				6: Bool,
-				7: QWord,
-				0: new Parser(),
-			},
-		}),
-});
+const StructProperty = new Parser()
+	.endianess("little")
+	.int32("taille_nom")
+	.string("nom", {
+		encoding: "utf8",
+		length: "taille_nom",
+		stripNull: true,
+	})
+	.int32("taille_label")
+	.string("label", {
+		encoding: "utf8",
+		length: "taille_label",
+		stripNull: true,
+	})
+	.int32("taille_type")
+	.string("type", {
+		encoding: "utf8",
+		length: "taille_type",
+		stripNull: true,
+	})
+	.choice("details", {
+		tag: testType,
+		choices: {
+			1: UInt32,
+			2: String16,
+			3: Float,
+			5: Byte,
+			6: Bool,
+			7: QWord,
+			0: new Parser(),
+		},
+	});
 
 const Version = new Parser()
 	.endianess("little")
@@ -369,6 +357,7 @@ const Property = new Parser()
 						5: Byte,
 						6: Bool,
 						7: QWord,
+						0: new Parser(),
 					},
 				}),
 		},
@@ -388,7 +377,7 @@ const Header = new Parser()
 	.array("Properties", {
 		type: Property,
 		readUntil: testReadUntil,
-		// length: "header_taille",
+	    length: "header_taille",
 	})
 	.choice("TEST", {
 		tag: testTest,
